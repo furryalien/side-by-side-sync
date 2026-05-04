@@ -9,8 +9,8 @@ param(
 $ErrorActionPreference = "Stop"
 
 dotnet run --project src/SideBySideSync/SideBySideSync.csproj -- `
-  --folder $Folder `
-  --sharedKey $SharedKey `
-  --listenPort $ListenPort `
-  --remoteHost $RemoteHost `
-  --remotePort $RemotePort
+  --folder="$Folder" `
+  --sharedkey="$SharedKey" `
+  --listenport=$ListenPort `
+  --remotehost="$RemoteHost" `
+  --remoteport=$RemotePort
