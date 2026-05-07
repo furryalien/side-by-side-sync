@@ -255,7 +255,7 @@ static async Task SendFileAsync(SyncState state, string fullPath, CancellationTo
         var relativePath = Path.GetRelativePath(state.Folder, fullPath);
         
         // Read file with retry for locked files
-        byte[] fileData = Array.Empty<byte>();
+        byte[]? fileData = null;
         for (int attempt = 0; attempt < 3; attempt++)
         {
             try
@@ -266,8 +266,10 @@ static async Task SendFileAsync(SyncState state, string fullPath, CancellationTo
             catch (IOException) when (attempt < 2)
             {
                 await Task.Delay(100, token);
+                continue;
             }
         }
+        if (fileData is null) throw new IOException($"Failed to read file after 3 attempts: {fullPath}");
 
         // Protocol: [MessageType:4][PathLength:4][Path:variable][DataLength:8][Data:variable]
         var pathBytes = Encoding.UTF8.GetBytes(relativePath);
